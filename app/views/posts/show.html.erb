@@ -1,0 +1,115 @@
+<style>
+    .container{
+        padding-top: 20pt;
+    }
+    .write-board{
+        float :right;
+    }
+    .btn-outline-info {
+      color: #5bc0de;
+      background-image: none;
+      background-color: transparent;
+      border-color: #5bc0de;
+      float: right;
+      margin: 10pt;
+    }
+    .userInfo{
+      /*float: right;*/
+      margin-left: 90pt;
+      margin-top: 50pt;
+    }
+</style>
+
+
+<html>
+  <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+  
+  <body>
+    
+    <!-- 이메일, 로그아웃, 정보수정 버튼 만들기 -->
+    <div class="userInfo">
+      <br>
+      <button class="btn_show" style="padding:3px">open</button>
+      <div class="form-inline" id="btn_word">
+          <% if user_signed_in? %>
+            <p style="margin-right:10pt;"><b><%= current_user.email %></b>님, 환영합니다!</p><br>
+            <%= button_to "logout", destroy_user_session_path, method: :delete, data: {confirm: "로그아웃 하시겠습니까?"}, :class => "btn btn-secondary btn-sm" %>
+            <br>
+            <% if current_user.email != 'admin@email.com'%>
+              <%= button_to "edit", edit_user_registration_path, method: :get, :class => "btn btn-secondary btn-sm" %>
+            <% else %>
+              <%= link_to "AdminPage", '/admin', :class => "btn btn-secondary btn-sm" %>
+            <% end %>  
+          <% end %>
+      </div>
+      <button class="btn_hide" style="padding:3px">close</button>
+    </div>
+
+    
+    <div class="container" style ="margin-top:30px;">
+      <center><h3 class="hover1">Team2 SNS</h3></center>
+      <a href="/posts/new"><button type="button" class="btn btn-outline-info" style="float:left;">글쓰기</button></a>
+      <br>
+    
+      <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>글쓴이</th>
+              <th>제목</th>
+              <th>날짜<th>
+            </tr>
+          </thead>
+          <tbody>
+              <% @posts.each do |p| %>
+              <tr>
+                <td><%= p.userName %></td>
+                <td><a href ="/posts/detail/<%= p.id %>"><%= p.title %></a></td>
+                <td><%= p.created_at.in_time_zone("Asia/Seoul").strftime("%Y-%m-%d")%></td>
+                <% if current_user.email == p.userName || current_user.email == "admin@email.com" %>
+                <td ><a href ="/posts/edit/<%= p.id %>">수정</a> <a href ="/posts/destroy/<%= p.id %>" data-confirm="삭제하시겠습니까?">삭제</a></td>
+                <% end %>
+              </tr>
+              <% end %>
+          </tbody>
+      </table>
+    </div>
+  </body>
+</html>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js" ></script>
+<script type="text/javascript"></script>
+<script>
+  // 이림아 스크립트 
+  $(function(){
+  $('.btn_show').click(function(){
+    $('#btn_word').show();
+    $('#btn_show').hide();
+    
+  });
+  $('.btn_hide').click(function(){
+    $('#btn_word').hide();
+    $('.btn_hide').show();
+  });
+  });
+  
+  // 구유림 스크립트
+  $(function(){
+    var hover1 = $('.hover1');
+    hover1.hover(function(){
+      hover1.css('color','#00cccc');
+    },function(){
+      hover1.css('color','#66cc00');
+    });
+  });
+  
+  
+</script>

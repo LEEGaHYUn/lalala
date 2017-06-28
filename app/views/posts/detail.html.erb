@@ -1,0 +1,92 @@
+
+<style>
+    .card-cls{
+        padding : 100pt;
+    }
+    .like{
+        float:right;
+    }
+    .delete-btn{
+        float:right;
+    }
+</style>
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="card-cls">
+        <div class="card">
+            
+            <div class="card-block">
+                <h4 class="card-title"><%= @one_post.title%></h4>
+                <h6 class="card-subtitle mb-2 text-muted"><%= @one_post.userName %></h6>
+                <p class="card-text"><%= @one_post.content %></p>
+                <!--<img src="<%= @one_post.image_url%>" style="height:400px; width:300px" >-->
+                <img src="<%= image_path @one_post.image_url %>"  style="height:400px; width:300px" >
+                <!-- 좋아요 -->
+                <form action="/<%= @one_post.id %>/like_create" method="post" style="float:right;">
+                    <button type="submit" class="btn btn-outline-danger"><%= Post.find(@one_post.id).likes.count %>
+                    <i class="fa fa-heart" aria-hidden="true"></i> </button>
+                </form>
+                <br>
+                <hr>
+                
+                <!--댓글 구현-->
+                <p><b>댓글</b></p>
+                <div class="comment_div">
+                    <% @comments.each do |c| %>
+                        <p><%= c.content %>
+                        <a href="/posts/detail/<%= @one_post.id %>/comments/destroy/<%= c.id %>" data-method="post" class="delete-btn">삭제</a>
+                        <br>
+                        </p>
+                    <% end %>
+                </div>
+                
+            </div>
+            
+            <!-- 댓글 입력 -->
+            <div class="col-lg-11">
+                <div class="input-group">
+                  <input type="text" class="form-control" name="comment_content" id="id_comment" placeholder="">
+                  <span class="input-group-btn">
+                    <button class="btn btn-secondary" id="comment_submit" type="submit" style="width: 50px;">입력</button>
+                  </span>
+                </div>
+            </div>
+            <br>
+        </div>
+        <a href="/posts/show" class="card-link" style="float:right;">처음으로 돌아가기</a>
+    </div>
+</body>
+
+<script>
+    $(function(){
+        $('#comment_submit').click(function(){
+            var comment_content = $('#id_comment').val();
+            // alert(comment_content);
+           $.ajax({
+              method: "POST",
+              url: '/posts/detail/<%= @one_post.id %>/comments/create',
+              data: { comment_content: comment_content, post_id: <%= @one_post.id %> },
+              success: function(){
+                  alert('댓글이 달리지 않았습니다.');
+              },
+              error: function(){
+                //   alert('성공');
+                  $('.comment_div').append(comment_content);
+                  $('#id_comment').val('');
+              }
+            })
+        });
+    });
+</script>

@@ -1,0 +1,49 @@
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    .write-form{
+        padding : 40pt;
+    }
+    span {
+            display: none;
+        }
+</style>
+
+<body>
+    <div class="write-form">
+        <form action="/posts/create" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+            <label for="exampleInputEmail1">작성자</label>
+            <input type="email" class="form-control" name="userId" id="userId" value="<%= current_user.email %>">
+            </div>
+            
+            <div class="form-group">
+            <label for="exampleInputPassword1">제목</label>
+            <input type="text" class="form-control" name="title" id="titleId">
+            </div>
+            
+            <!-- 가현 jquery -->
+            <div class ="form-group">
+            <label for="exampleInputPassword1">내용</label>
+            <span>신중하게 작성해주세요!</span>
+            <textarea class = "form-control" name="content" id="contentId" rows="3"></textarea> 
+            </div>
+            <input type="file" name="pic" accept="image/*">
+            <center><button type="submit" class="btn btn-default" id="comment_submit">작성하기</button></center>
+        </form>
+    </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("textarea").focus(function(){
+            $("span").css("display", "inline").fadeOut(2000);
+        });
+    });
+</script>
